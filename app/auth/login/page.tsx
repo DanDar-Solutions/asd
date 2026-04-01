@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'  // ← add this import
 import Auth from '../../../components/auth/auth'
 import Questions from '../../../components/auth/quiz'
+import StudentDashboard from '../../../components/dashboard/dashboard'
 
 type View = 'auth' | 'questions' | 'dashboard'
 
@@ -41,10 +42,5 @@ export default function LoginForm() {
     )
   }
 
-  return (
-    <div style={{ padding: '40px', fontFamily: 'sans-serif' }}>
-      <h1>Welcome, {currentUser?.first_name}!</h1>
-      <p>Dashboard coming soon.</p>
-    </div>
-  )
+  return <StudentDashboard user={currentUser} />
 }

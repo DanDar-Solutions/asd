@@ -1,5 +1,4 @@
 "use client";
-import './quiz.css'
 import { useState, useEffect } from 'react'
 import { createClient } from '../../lib/supabase/client'
 
@@ -168,9 +167,9 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
 
     if (loading) {
         return (
-            <div className="q-page">
-                <div className="q-loader-wrap">
-                    <div className="q-spinner" />
+            <div className="min-h-screen flex items-center justify-center bg-[#f5f0e8] font-['Sora',sans-serif] p-6 relative">
+                <div className="flex flex-col items-center gap-4 text-[#7a6e5f] text-[0.9rem] z-10">
+                    <div className="w-9 h-9 border-4 border-black/10 border-t-[#7ea86a] rounded-full animate-[spin_0.8s_linear_infinite]" />
                     <p>Loading your setup…</p>
                 </div>
             </div>
@@ -179,9 +178,9 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
 
     if (!questions.length) {
         return (
-            <div className="q-page">
-                <div className="q-card">
-                    <p>No questions found. Please contact support.</p>
+            <div className="min-h-screen flex items-center justify-center bg-[#f5f0e8] font-['Sora',sans-serif] p-6 relative">
+                <div className="bg-[#fffdf7] rounded-[24px] border border-black/5 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_32px_rgba(0,0,0,0.06)] p-10 pb-9 flex flex-col items-center z-10 w-full max-w-[540px]">
+                    <p className="text-[#2c2416] font-medium">No questions found. Please contact support.</p>
                 </div>
             </div>
         )
@@ -195,56 +194,62 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
     const canProceed = currentAnswer !== '' && currentAnswer !== undefined
 
     return (
-        <div className="q-page">
+        <div className="min-h-screen flex items-center justify-center bg-[#f5f0e8] font-['Sora',sans-serif] p-6 relative overflow-hidden">
             {/* Background blobs */}
-            <div className="q-blob q-blob-1" />
-            <div className="q-blob q-blob-2" />
+            <div className="absolute rounded-full blur-[80px] opacity-35 pointer-events-none w-[480px] h-[480px] bg-[radial-gradient(circle,#c9d8b6_0%,#a8c090_100%)] top-[-120px] right-[-100px]" />
+            <div className="absolute rounded-full blur-[80px] opacity-35 pointer-events-none w-[360px] h-[360px] bg-[radial-gradient(circle,#e8d5b0_0%,#d4b896_100%)] bottom-[-80px] left-[-80px]" />
 
-            <div className="q-shell">
+            <div className="w-full max-w-[540px] relative z-10 flex flex-col">
                 {/* Header */}
-                <div className="q-header">
-                    <span className="q-brand">Student Portal</span>
-                    <span className="q-step-badge">{current + 1} / {questions.length}</span>
+                <div className="flex items-center justify-between mb-[18px]">
+                    <span className="font-['Lora',serif] italic text-[1.1rem] text-[#4a4235] tracking-tight">Student Portal</span>
+                    <span className="text-[0.75rem] font-semibold tracking-widest uppercase text-[#7a6e5f] bg-white/60 border border-black/5 px-2.5 py-1 rounded-[20px]">{current + 1} / {questions.length}</span>
                 </div>
 
                 {/* Progress bar */}
-                <div className="q-progress-track">
-                    <div className="q-progress-fill" style={{ width: `${progress}%` }} />
+                <div className="h-1 bg-black/[0.08] rounded overflow-hidden mb-7">
+                    <div className="h-full bg-gradient-to-r from-[#7ea86a] to-[#5c8c48] rounded transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
                 </div>
 
                 {/* Card */}
-                <div className={`q-card ${animating ? (direction === 'forward' ? 'q-slide-out-left' : 'q-slide-out-right') : 'q-slide-in'}`}>
-                    <div className="q-category-tag">{q.category.replace(/_/g, ' ')}</div>
-                    <h2 className="q-question">{q.question_text}</h2>
+                <div className={`bg-[#fffdf7] rounded-[24px] border border-black/5 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_32px_rgba(0,0,0,0.06)] p-10 pb-9 min-h-[340px] flex flex-col transition-all duration-[280ms] ease-out 
+                    ${animating ? (direction === 'forward' ? 'opacity-0 -translate-x-5' : 'opacity-0 translate-x-5') : 'opacity-100 translate-x-0'}
+                    sm:max-w-none sm:p-10 p-7 sm:pb-9 pb-6`}>
+                    
+                    <div className="text-[0.68rem] font-semibold tracking-widest uppercase text-[#9b8c79] mb-3.5">{q.category.replace(/_/g, ' ')}</div>
+                    <h2 className="font-['Lora',serif] sm:text-[1.55rem] text-[1.25rem] font-semibold text-[#2c2416] leading-snug m-0 mb-7 tracking-tight">{q.question_text}</h2>
 
                     {/* Options grid or text input */}
                     {opts.length > 0 ? (
-                        <div className={`q-options ${opts.length > 4 ? 'q-options-grid' : 'q-options-col'}`}>
+                        <div className={`flex flex-col gap-2.5 flex-1 ${opts.length > 4 ? 'grid sm:grid-cols-2 grid-cols-1' : ''}`}>
                             {opts.map((opt) => (
                                 <button
                                     key={opt.value}
-                                    className={`q-option ${currentAnswer === opt.value ? 'q-option-selected' : ''}`}
+                                    className={`relative border-[1.5px] rounded-xl p-[13px] px-[18px] text-[0.9rem] font-medium cursor-pointer text-left transition-all duration-200 font-['Sora',sans-serif] flex items-center gap-2.5 outline-none
+                                        ${currentAnswer === opt.value
+                                            ? 'bg-[#2c2416] text-[#f5f0e8] border-[#2c2416] hover:bg-[#3a3028] hover:border-[#3a3028]'
+                                            : 'bg-[#f5f0e8] text-[#3a3028] border-transparent hover:bg-[#ede7d8] hover:border-black/10 hover:-translate-y-[1px]'}`}
                                     onClick={() => handleSelect(opt.value)}
                                 >
-                                    {currentAnswer === opt.value && <span className="q-check">✓</span>}
+                                    {currentAnswer === opt.value && <span className="text-[0.8rem] text-[#c9d8b6] shrink-0">✓</span>}
                                     {opt.label}
                                 </button>
                             ))}
                         </div>
                     ) : isTimeCategory(q.category) ? (
-                        <div className="q-input-wrap">
+                        <div className="flex-1 flex items-start pt-2">
                             <input
                                 type="time"
-                                className="q-input"
+                                className="w-full bg-[#f0ebe0] border-[1.5px] border-black/[0.08] rounded-xl p-[14px] px-[18px] text-[1rem] font-medium text-[#2c2416] font-['Sora',sans-serif] outline-none transition-all duration-200 focus:border-[#7ea86a] focus:ring-[3px] focus:ring-[#7ea86a]/15"
                                 value={currentAnswer}
                                 onChange={(e) => handleSelect(e.target.value)}
                             />
                         </div>
                     ) : isNumberCategory(q.category) ? (
-                        <div className="q-input-wrap">
+                        <div className="flex-1 flex items-start pt-2">
                             <input
                                 type="number"
-                                className="q-input"
+                                className="w-full bg-[#f0ebe0] border-[1.5px] border-black/[0.08] rounded-xl p-[14px] px-[18px] text-[1rem] font-medium text-[#2c2416] font-['Sora',sans-serif] outline-none transition-all duration-200 focus:border-[#7ea86a] focus:ring-[3px] focus:ring-[#7ea86a]/15 placeholder:text-[#b0a596]"
                                 placeholder="Enter a number"
                                 value={currentAnswer}
                                 onChange={(e) => handleSelect(e.target.value)}
@@ -253,10 +258,10 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
                             />
                         </div>
                     ) : (
-                        <div className="q-input-wrap">
+                        <div className="flex-1 flex items-start pt-2">
                             <input
                                 type="text"
-                                className="q-input"
+                                className="w-full bg-[#f0ebe0] border-[1.5px] border-black/[0.08] rounded-xl p-[14px] px-[18px] text-[1rem] font-medium text-[#2c2416] font-['Sora',sans-serif] outline-none transition-all duration-200 focus:border-[#7ea86a] focus:ring-[3px] focus:ring-[#7ea86a]/15 placeholder:text-[#b0a596]"
                                 placeholder="Type your answer…"
                                 value={currentAnswer}
                                 onChange={(e) => handleSelect(e.target.value)}
@@ -264,13 +269,13 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
                         </div>
                     )}
 
-                    {error && <p className="q-error">{error}</p>}
+                    {error && <p className="mt-3 text-[0.82rem] text-[#c0392b] font-medium">{error}</p>}
                 </div>
 
                 {/* Navigation */}
-                <div className="q-nav">
+                <div className="flex items-center justify-between mt-5">
                     <button
-                        className="q-btn-back"
+                        className="bg-transparent border-none font-['Sora',sans-serif] text-[0.88rem] font-medium text-[#7a6e5f] cursor-pointer py-2.5 transition-colors hover:text-[#2c2416] disabled:opacity-30 disabled:cursor-not-allowed"
                         onClick={handleBack}
                         disabled={current === 0}
                     >
@@ -278,12 +283,12 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
                     </button>
 
                     <button
-                        className="q-btn-next"
+                        className="bg-[#2c2416] text-[#f5f0e8] border-none rounded-xl p-[13px] px-7 font-['Sora',sans-serif] text-[0.9rem] font-semibold cursor-pointer transition-all duration-200 min-w-[140px] flex items-center justify-center gap-2 hover:bg-[#3a3028] hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(44,36,22,0.2)] disabled:opacity-35 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
                         onClick={handleNext}
                         disabled={!canProceed || saving}
                     >
                         {saving ? (
-                            <span className="q-btn-spinner" />
+                            <span className="w-4 h-4 border-2 border-[#f5f0e8]/30 border-t-[#f5f0e8] rounded-full animate-[spin_0.7s_linear_infinite]" />
                         ) : isLast ? (
                             'Finish setup →'
                         ) : (
@@ -293,13 +298,19 @@ export default function Questions({ user, onComplete }: QuestionsProps) {
                 </div>
 
                 {/* Dot indicators */}
-                <div className="q-dots">
+                <div className="flex items-center justify-center gap-1.5 mt-5">
                     {questions.map((_, i) => (
                         <div
                             key={i}
-                            className={`q-dot ${i === current ? 'q-dot-active' : ''} ${answers[questions[i].id] ? 'q-dot-done' : ''}`}
+                            className={`h-[6px] rounded-full transition-all duration-250 ease-out
+                                ${i === current ? 'w-5 bg-[#2c2416]' : 'w-[6px]'}
+                                ${answers[questions[i].id] && i !== current ? 'bg-[#7ea86a]' : ''}
+                                ${!answers[questions[i].id] && i !== current ? 'bg-black/15' : ''}
+                            `}
                         />
                     ))}
                 </div>
             </div>
-            </div>)}
+        </div>
+    )
+}

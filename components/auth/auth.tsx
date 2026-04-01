@@ -1,4 +1,4 @@
-import './auth.css'
+"use client";
 import { useState } from 'react'
 import { createClient } from '../../lib/supabase/client'
 
@@ -96,16 +96,16 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: (user: any) => 
 
     if (signUpSuccess) {
         return (
-            <div className="auth-page">
-                <div className="auth-card">
-                    <div className="auth-success-icon">✓</div>
-                    <h2 className="auth-title">Account created!</h2>
-                    <p className="auth-subtitle-center">
+            <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee] p-4 font-serif">
+                <div className="bg-white rounded-[16px] border border-[#e8e3da] p-10 px-8 w-full max-w-[400px] flex flex-col">
+                    <div className="w-12 h-12 rounded-full bg-[#eaf3de] text-[#3b6d11] text-xl flex items-center justify-center mx-auto mb-4 font-semibold">✓</div>
+                    <h2 className="text-[22px] font-semibold text-[#1a1714] text-center mb-2">Account created!</h2>
+                    <p className="text-[14px] text-[#3d3830] text-center leading-relaxed mb-5">
                         Your account <strong>{userId}</strong> has been created successfully.
                     </p>
                     <button
                         onClick={() => onAuthSuccess({ user_id: userId, password })}
-                        className="auth-primary-btn"
+                        className="bg-[#2c2620] text-white border-none rounded-lg p-3 text-[15px] font-medium cursor-pointer transition-opacity mt-1 hover:opacity-90"
                     >
                         Continue →
                     </button>
@@ -115,81 +115,81 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: (user: any) => 
     }
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
-                <h1 className="auth-app-title">Student Portal</h1>
-                <p className="auth-app-sub">
+        <div className="min-h-screen flex items-center justify-center bg-[#f5f3ee] p-4 font-serif">
+            <div className="bg-white rounded-[16px] border border-[#e8e3da] p-10 px-8 w-full max-w-[400px] flex flex-col">
+                <h1 className="text-[24px] font-semibold text-[#1a1714] m-0 mb-1 text-center tracking-tight">Student Portal</h1>
+                <p className="text-[14px] text-[#7a7268] text-center m-0 mb-6">
                     {mode === 'signin' ? 'Sign in to your account' : 'Create a new account'}
                 </p>
 
                 {/* Tab switcher */}
-                <div className="auth-tabs">
+                <div className="flex bg-[#f5f3ee] rounded-lg p-1 mb-6">
                     <button
-                        className={`auth-tab ${mode === 'signin' ? 'auth-tab-active' : ''}`}
+                        className={`flex-1 border-none bg-transparent p-2 rounded-md text-[14px] cursor-pointer transition-all ${mode === 'signin' ? 'bg-white text-[#1a1714] font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)]' : 'text-[#7a7268]'}`}
                         onClick={() => switchMode('signin')}
                     >
                         Sign in
                     </button>
                     <button
-                        className={`auth-tab ${mode === 'signup' ? 'auth-tab-active' : ''}`}
+                        className={`flex-1 border-none bg-transparent p-2 rounded-md text-[14px] cursor-pointer transition-all ${mode === 'signup' ? 'bg-white text-[#1a1714] font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)]' : 'text-[#7a7268]'}`}
                         onClick={() => switchMode('signup')}
                     >
                         Sign up
                     </button>
                 </div>
 
-                <form onSubmit={mode === 'signin' ? handleSignIn : handleSignUp} className="auth-form">
-                    <div className="auth-field">
-                        <label className="auth-label">User ID</label>
+                <form onSubmit={mode === 'signin' ? handleSignIn : handleSignUp} className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[13px] font-medium text-[#3d3830]">User ID</label>
                         <input
                             type="text"
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
                             placeholder="Enter your user ID"
                             required
-                            className="auth-input"
+                            className="p-2.5 px-3.5 rounded-lg border border-[#ddd8cf] text-[15px] text-[#1a1714] bg-[#fafaf8] outline-none transition-colors focus:border-gray-400 font-sans"
                         />
                     </div>
 
-                    <div className="auth-field">
-                        <label className="auth-label">Password</label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[13px] font-medium text-[#3d3830]">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
                             required
-                            className="auth-input"
+                            className="p-2.5 px-3.5 rounded-lg border border-[#ddd8cf] text-[15px] text-[#1a1714] bg-[#fafaf8] outline-none transition-colors focus:border-gray-400 font-sans"
                         />
                     </div>
 
                     {mode === 'signup' && (
-                        <div className="auth-field">
-                            <label className="auth-label">Confirm password</label>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[13px] font-medium text-[#3d3830]">Confirm password</label>
                             <input
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="Re-enter your password"
                                 required
-                                className="auth-input"
+                                className="p-2.5 px-3.5 rounded-lg border border-[#ddd8cf] text-[15px] text-[#1a1714] bg-[#fafaf8] outline-none transition-colors focus:border-gray-400 font-sans"
                             />
                         </div>
                     )}
 
-                    {error && <p className="auth-error">{error}</p>}
+                    {error && <p className="text-[13px] text-[#c0392b] bg-[#fdf0ee] border border-[#f5c6c0] rounded-lg p-2.5 px-3 m-0">{error}</p>}
 
-                    <button type="submit" disabled={loading} className="auth-primary-btn">
-                        {loading ? <div className="loader" /> : mode === 'signin' ? 'Sign in' : 'Create account'}
+                    <button type="submit" disabled={loading} className="bg-[#2c2620] text-white border-none rounded-lg p-2.5 text-[15px] font-medium cursor-pointer mt-1 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center relative hover:opacity-90 min-h-[44px]">
+                        {loading ? <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-[spin_1s_linear_infinite] absolute" /> : mode === 'signin' ? 'Sign in' : 'Create account'}
                     </button>
                 </form>
 
-                <p className="auth-switch-text">
+                <p className="text-[13px] text-[#7a7268] text-center mt-5">
                     {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
                     <button
                         type="button"
                         onClick={() => switchMode(mode === 'signin' ? 'signup' : 'signin')}
-                        className="auth-link-btn"
+                        className="bg-transparent border-none text-[#2c2620] text-[13px] font-semibold cursor-pointer p-0 underline hover:text-black"
                     >
                         {mode === 'signin' ? 'Sign up' : 'Sign in'}
                     </button>

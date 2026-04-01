@@ -50,15 +50,16 @@ export async function signupRegistry(regNo: string, passwordStr: string) {
     if (insertError) {
         return { error: 'Failed to create account. Please try again.', user: null };
     }
+    
     return await signinRegistry(regNo, passwordStr);
 }
 
 
 export async function signOut() {
     const supabase = await createClient();
-    await supabase.auth.signOut();
     const cookieStore = await cookies();
     cookieStore.delete('custom_auth_user');
+    await supabase.auth.signOut();
     revalidatePath('/', 'layout');
 }
 
@@ -71,3 +72,6 @@ export async function getCurrentDemoUser() {
     const { data } = await supabase.from('demo_users').select('*').eq('user_id', val).single();
     return data;
 }
+
+
+
