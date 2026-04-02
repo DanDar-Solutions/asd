@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { signinRegistry } from '@/core/auth-action'
 
 export default function LoginPage() {
@@ -83,6 +84,13 @@ export default function LoginPage() {
                             : 'Sign in →'
                         }
                     </button>
+
+                    <p className="text-[13px] text-[#7a7268] text-center m-0 mt-2">
+                        Don&apos;t have an account?{' '}
+                        <Link href="/auth/signup" className="text-[#2c2620] font-medium underline underline-offset-2 hover:opacity-70 transition-opacity">
+                            Create one
+                        </Link>
+                    </p>
                 </form>
             </div>
         </div>

@@ -42,6 +42,75 @@ export async function signinRegistry(regNo: string, password: string) {
 }
 
 // ─────────────────────────────────────────────
+// Sign Up (Registry ID + password — plain text, hackathon style)
+// ─────────────────────────────────────────────
+export async function signupRegistry(
+    regNo: string,
+    password: string,
+    confirmPassword: string
+) {
+    if (!regNo || !password) return { error: 'ID and password are required.', user: null };
+    if (password !== confirmPassword) return { error: 'Passwords do not match.', user: null };
+
+    const supabase = await createClient();
+
+    // Check if user_id already exists
+    const { data: existing } = await supabase
+        .from('demo_users')
+        .select('user_id')
+        .eq('user_id', regNo)
+        .maybeSingle();
+
+    if (existing) return { error: 'This ID is already taken.', user: null };
+
+    // Auto-assign first available class (class selection comes later)
+    const { data: firstClass } = await supabase
+        .from('classes')
+        .select('id')
+        .order('grade')
+        .limit(1)
+        .single();
+
+    if (!firstClass) return { error: 'No classes available. Contact admin.', user: null };
+
+    // Insert new user (plain text password)
+    const { data, error } = await supabase
+        .from('demo_users')
+        .insert({ user_id: regNo, password, class_id: firstClass.id })
+        .select()
+        .single();
+
+    if (error) return { error: 'Could not create account. ' + error.message, user: null };
+
+    // Auto-login: set session cookie
+    const cookieStore = await cookies();
+    cookieStore.set('custom_auth_user', data.user_id, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: 'lax',
+        httpOnly: true,
+    });
+
+    revalidatePath('/', 'layout');
+    return { user: data, error: null };
+}
+
+// ─────────────────────────────────────────────
+// Get available classes (for signup dropdown)
+// ─────────────────────────────────────────────
+export async function getClasses() {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from('classes')
+        .select('id, grade, class_section, class_name')
+        .order('grade')
+        .order('class_section');
+
+    if (error) return [];
+    return data ?? [];
+}
+
+// ─────────────────────────────────────────────
 // Sign Out
 // ─────────────────────────────────────────────
 export async function signOut() {
