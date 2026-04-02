@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { Providers } from "@/components/Provider"; // note correct path
+import { Providers } from "@/components/Provider";
 import { Toaster } from "sonner";
-import { Suspense } from "react"; // 1. Add this import
-import Navbar from "@/components/navbar";
+import { Suspense } from "react";
+import FloatingProfile from "@/components/floating-profile";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -31,9 +31,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased flex flex-col min-h-screen bg-background`}>
         <Providers>
-          {/* 2. Wrap Navbar in Suspense */}
-          <Suspense fallback={<NavbarSkeleton />}>
-            <Navbar />
+          {/* Floating profile ball (top-right) */}
+          <Suspense fallback={null}>
+            <FloatingProfile />
           </Suspense>
           <main className="flex-1 flex flex-col">
             {children}
@@ -43,9 +43,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
-
-// 3. Optional: A simple loading state so the layout doesn't "jump"
-function NavbarSkeleton() {
-  return <div className="w-full h-16 border-b bg-background" />;
 }

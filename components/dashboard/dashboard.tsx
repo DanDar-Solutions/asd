@@ -37,7 +37,7 @@ interface Props {
         classes?: { grade?: number; class_section?: string; class_name?: string };
         [key: string]: unknown;
     };
-    homework: DbHomework[];
+    homework?: DbHomework[];
     schedule?: DbSchedule[];
     profile?: DbProfile | null;
 }
@@ -101,7 +101,7 @@ function buildCalendar() {
 
 export default function StudentDashboard({ user, homework, schedule = [], profile }: Props) {
     const homeworks =
-        homework?.length > 0
+        homework && homework.length > 0
             ? homework.map((hw, i) => ({
                   id:      hw.id ?? i,
                   subject: (hw.subject as string) || "Assignment",
